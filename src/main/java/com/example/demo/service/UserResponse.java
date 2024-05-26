@@ -1,25 +1,22 @@
-package service;
+package com.example.demo.service;
 
-import Address.AddressResponse;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
-
-import java.math.BigDecimal;
 
 @Data
 @Builder
 @Accessors(chain = true)
 public class UserResponse {
     private Integer id;
-    private String login;
+    private Integer login;
     private String firstName;
     private String middleName;
     private String lastName;
-    private String ageOfBirth;
-    private Boolean sex;
+    private String birthday;
+    private Boolean gender;
     private String email;
-    private BigDecimal Balance;
-    private AddressResponse address;
+    private Long rub;
+    private Long penny;
 
 }

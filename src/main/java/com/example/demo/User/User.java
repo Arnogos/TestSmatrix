@@ -1,10 +1,9 @@
-package Address;
+package com.example.demo.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 @Getter
@@ -19,7 +18,7 @@ public class User {
     private Integer id;
 
     @Column(name = "login",nullable = false, unique = true)
-    private String login;
+    private Integer login;
 
     @Column(name = "firstName")
     private String firstName;
@@ -31,20 +30,20 @@ public class User {
     private String lastName;
 
     @Column(name = "age")
-    private String ageOfBirth;
+    private String birthday;
 
-    @Column(name = "sex")
-    private Boolean sex;
+    @Column(name = "gender")
+    private Boolean gender;
 
     @Column(name = "email")
     private String email;
 
-    @Column(name = "balance")
-    private BigDecimal balance;
+    @Column(name = "rub")
+    private Long rub;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", foreignKey = @ForeignKey(name = "fk_users_address_id"))
-    private Address address;
+    @Column(name = "penny")
+    private Long penny;
+
 
     @Override
     public boolean equals(Object o) {
@@ -61,16 +60,18 @@ public class User {
 
     @Override
     public String toString() {
-        return "Address.User{" +
+        return "Address.com.example.demo.User{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", middleName='" + middleName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", AgeOfBirth=" + ageOfBirth + '\'' +
+                ", birthday=" + birthday + '\'' +
                 ", email=" + email + '\'' +
-                ", email=" + balance + '\'' +
-                ", Sex=" + sex +
+                ", rub=" + rub + '\'' +
+                ", penny=" + penny + '\'' +
+                ", gender=" + gender +
                 '}';
     }
+
 }

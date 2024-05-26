@@ -1,19 +1,12 @@
-package service;
+package com.example.demo.service;
 
-import Address.AddressResponse;
-import Address.CreateAddressRequest;
-import Address.User;
+import com.example.demo.User.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import service.UserService;
-
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,7 +16,7 @@ import static java.util.Optional.ofNullable;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private static UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -36,27 +29,27 @@ public class UserServiceImpl implements UserService {
 
     @NonNull
     private UserResponse buildUserResponse(@NotNull User user) {
-        return UserResponse
-                .builder()
+        return UserResponse.builder()
                 .id(user.getId())
                 .login(user.getLogin())
-                .setAgeOfBirth(user.getAgeOfBirth())
-                .setFirstName(user.getFirstName())
-                .setMiddleName(user.getMiddleName())
-                .setLastName(user.getLastName())
-                .setSex(user.getSex())
-                .setBalance(user.getBalance())
-                .setEmail(user.getEmail());
+                .birthday(user.getBirthday())
+                .firstName(user.getFirstName())
+                .middleName(user.getMiddleName())
+                .lastName(user.getLastName())
+                .gender(user.getGender())
+                .rub(user.getRub())
+                .penny(user.getPenny())
+                .email(user.getEmail()).build();
     }
 
     @NotNull
     @Override
     @Transactional(readOnly = true)
-    public UserResponse findById(@NotNull Integer userId) {
-        return userRepository.findById(userId)
-                .map(this::buildUserResponse)
-                .orElseThrow(() -> new EntityNotFoundException("User " + userId + " is not found"));
+    public User findByLogin(@NotNull Integer userLogin) {
+        System.out.println(888);
+       return userRepository.findByLogin(userLogin);
     }
+
 
     @NotNull
     @Override
@@ -70,26 +63,28 @@ public class UserServiceImpl implements UserService {
     private User buildUserRequest(@NotNull CreateUserRequest request) {
         return new User()
                 .setLogin(request.getLogin())
-                .setAgeOfBirth(request.getAgeOfBirth())
+                .setBirthday(request.getBirthday())
                 .setFirstName(request.getFirstName())
                 .setMiddleName(request.getMiddleName())
                 .setLastName(request.getLastName())
-                .setSex(request.getSex())
-                .setBalance(request.getBalance())
+                .setGender(request.getGender())
+                .setRub(request.getRub())
+                .setPenny(request.getPenny())
                 .setEmail(request.getEmail());
     }
 
-    @NotNull
-    @Override
-    @Transactional
-    public User payment(BigDecimal sum, String userLogin){
 
-        Optional<User> user = userRepository.findById();
+    @Transactional
+    public User payment(Long rub1, Long penny1, Integer userLogin){
+
+        Optional<User> user = Optional.ofNullable(userRepository.findByLogin(userLogin));
         User user1 = user.get();
 
-        BigDecimal balance = user1.getBalance();
-        if(balance.compareTo(sum)>= 0){
-            user1.setBalance(balance.subtract(sum));
+        Long rub = user1.getRub();
+        Long penny = user1.getPenny();
+        if(rub/10 + penny >= rub1/10 + penny1){
+            user1.setRub(rub - rub1);
+            user1.setPenny(penny - penny1);
            return userRepository.save(user1);
         } else{
             throw new RuntimeException();
@@ -108,10 +103,10 @@ public class UserServiceImpl implements UserService {
 
     private void userUpdate(@NotNull User user, @NotNull CreateUserRequest request) {
         ofNullable(request.getLogin()).ifPresent(user::setLogin);
-        ofNullable(request.getFirstName()).map(user::setFirstName);
-        ofNullable(request.getMiddleName()).map(user::setMiddleName);
-        ofNullable(request.getLastName()).map(user::setLastName);
-        ofNullable(request.getAgeOfBirth()).map(user::setAgeOfBirth);
+        ofNullable(request.getFirstName()).ifPresent(user::setFirstName);
+        ofNullable(request.getMiddleName()).ifPresent(user::setMiddleName);
+        ofNullable(request.getLastName()).ifPresent(user::setLastName);
+        ofNullable(request.getBirthday()).ifPresent(user::setBirthday);
 
     }
 

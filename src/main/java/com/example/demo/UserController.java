@@ -1,9 +1,13 @@
+package com.example.demo;
+
+
+import com.example.demo.User.User;
+import com.example.demo.service.CreateUserRequest;
+import com.example.demo.service.UserResponse;
+import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import service.CreateUserRequest;
-import service.UserResponse;
-import service.UserService;
 
 import java.util.List;
 
@@ -13,14 +17,14 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
-    private UserService userService;
+    private final UserService userService;
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     public List<UserResponse> findAll() {
         return userService.findAll();
     }
-    @GetMapping(value = "/{userId}", produces = APPLICATION_JSON_VALUE)
-    public UserResponse findById(@PathVariable Integer userId) {
-        return userService.findById(userId);
+    @GetMapping(value = "/{userLogin}", produces = APPLICATION_JSON_VALUE)
+    public User findByLogin(@PathVariable Integer userLogin) {
+        return userService.findByLogin(userLogin);
     }
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public UserResponse create(@RequestBody CreateUserRequest request) {
