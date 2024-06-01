@@ -1,6 +1,8 @@
-package com.example.demo.service;
+package service;
 
-import com.example.demo.User.User;
+import com.example.demo.enity.User;
+import com.example.demo.repository.CreateUserRequest;
+import com.example.demo.repository.UserResponse;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.List;
@@ -11,7 +13,7 @@ public interface UserService {
     List<UserResponse> findAll();
 
     @NotNull
-    User findByLogin(@NotNull Integer userLogin);
+    User findByLogin(@NotNull String userLogin);
 
     @NotNull
     UserResponse createUser(@NotNull CreateUserRequest request);

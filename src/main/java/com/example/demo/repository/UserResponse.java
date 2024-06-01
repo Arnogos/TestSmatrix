@@ -1,20 +1,23 @@
-package com.example.demo.service;
+package com.example.demo.repository;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Data
+@Builder
 @Accessors(chain = true)
-public class CreateUserRequest {
+public class UserResponse {
     private Integer id;
-    private Integer login;
+    private String login;
+    private String password;
     private String firstName;
     private String middleName;
     private String lastName;
     private String birthday;
-    private String email;
     private Boolean gender;
-    private Long penny;
+    private String email;
     private Long rub;
+    private Integer penny;
 
 }

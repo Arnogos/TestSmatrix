@@ -1,12 +1,17 @@
-package com.example.demo.service;
+package service;
 
-import com.example.demo.User.User;
+import com.example.demo.enity.User;
+import com.example.demo.repository.CreateUserRequest;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.UserResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import service.UserService;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,8 +35,8 @@ public class UserServiceImpl implements UserService {
     @NonNull
     private UserResponse buildUserResponse(@NotNull User user) {
         return UserResponse.builder()
-                .id(user.getId())
                 .login(user.getLogin())
+                .password(user.getPassword())
                 .birthday(user.getBirthday())
                 .firstName(user.getFirstName())
                 .middleName(user.getMiddleName())
@@ -45,7 +50,7 @@ public class UserServiceImpl implements UserService {
     @NotNull
     @Override
     @Transactional(readOnly = true)
-    public User findByLogin(@NotNull Integer userLogin) {
+    public User findByLogin(@NotNull String userLogin) {
         System.out.println(888);
        return userRepository.findByLogin(userLogin);
     }
@@ -63,25 +68,26 @@ public class UserServiceImpl implements UserService {
     private User buildUserRequest(@NotNull CreateUserRequest request) {
         return new User()
                 .setLogin(request.getLogin())
+                .setPassword(request.getPassword())
                 .setBirthday(request.getBirthday())
                 .setFirstName(request.getFirstName())
                 .setMiddleName(request.getMiddleName())
                 .setLastName(request.getLastName())
                 .setGender(request.getGender())
-                .setRub(request.getRub())
+                .setRub(request.getRub()+1000)
                 .setPenny(request.getPenny())
                 .setEmail(request.getEmail());
     }
 
 
     @Transactional
-    public User payment(Long rub1, Long penny1, Integer userLogin){
+    public User payment(Long rub1, Integer penny1, String userLogin){
 
         Optional<User> user = Optional.ofNullable(userRepository.findByLogin(userLogin));
         User user1 = user.get();
 
         Long rub = user1.getRub();
-        Long penny = user1.getPenny();
+        Integer penny = user1.getPenny();
         if(rub/10 + penny >= rub1/10 + penny1){
             user1.setRub(rub - rub1);
             user1.setPenny(penny - penny1);

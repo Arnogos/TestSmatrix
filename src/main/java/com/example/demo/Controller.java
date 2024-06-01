@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class controller {
+public class Controller {
 
-    @Value("application.properties")
+    @Value("demo")
     private String name;
 
     @GetMapping

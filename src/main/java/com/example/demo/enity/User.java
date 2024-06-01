@@ -1,4 +1,4 @@
-package com.example.demo.User;
+package com.example.demo.enity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +18,10 @@ public class User {
     private Integer id;
 
     @Column(name = "login",nullable = false, unique = true)
-    private Integer login;
+    private String login;
+
+    @Column(name = "login",nullable = false, unique = true)
+    private String password;
 
     @Column(name = "firstName")
     private String firstName;
@@ -29,7 +32,7 @@ public class User {
     @Column(name = "lastName")
     private String lastName;
 
-    @Column(name = "age")
+    @Column(name = "birthday")
     private String birthday;
 
     @Column(name = "gender")
@@ -42,7 +45,7 @@ public class User {
     private Long rub;
 
     @Column(name = "penny")
-    private Long penny;
+    private Integer penny;
 
 
     @Override
