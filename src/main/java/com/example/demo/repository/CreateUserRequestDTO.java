@@ -5,7 +5,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class CreateUserRequest {
+public class CreateUserRequestDTO {
     private Integer id;
     private String login;
     private String password;
@@ -13,9 +13,10 @@ public class CreateUserRequest {
     private String middleName;
     private String lastName;
     private String birthday;
+
     private String email;
-    private Boolean gender;
+    private String gender;
     private Integer penny;
-    private Long rub;
+    private Long rub = 1000L;
 
 }

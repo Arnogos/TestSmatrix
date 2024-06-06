@@ -4,8 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.Objects;
+import jakarta.validation.constraints.Email;
 
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import jakarta.validation.constraints.NotBlank;
 @Getter
 @Setter
 @Accessors(chain = true)
@@ -16,37 +21,49 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @Column(name = "login",nullable = false, unique = true)
+    @NotBlank
+    @Column(name = "login")
     private String login;
-
-    @Column(name = "login",nullable = false, unique = true)
+    @NotBlank
+    @Column(name = "password")
     private String password;
-
+    @NotBlank
     @Column(name = "firstName")
     private String firstName;
-
+    @NotBlank
     @Column(name = "middleName")
     private String middleName;
-
+    @NotBlank
     @Column(name = "lastName")
     private String lastName;
-
+    @NotBlank
     @Column(name = "birthday")
     private String birthday;
-
+    @NotBlank
     @Column(name = "gender")
-    private Boolean gender;
-
+    private String gender;
+    @NotBlank
     @Column(name = "email")
+    @Email
     private String email;
-
+    @NotBlank
     @Column(name = "rub")
     private Long rub;
 
     @Column(name = "penny")
     private Integer penny;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
+    private Set<Role> roles;
 
+    public User(String login, String email, String password) {
+        this.login = login;
+        this.email = email;
+        this.password = password;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -66,6 +83,7 @@ public class User {
         return "Address.com.example.demo.User{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", middleName='" + middleName + '\'' +
                 ", lastName='" + lastName + '\'' +
@@ -76,5 +94,6 @@ public class User {
                 ", gender=" + gender +
                 '}';
     }
+
 
 }

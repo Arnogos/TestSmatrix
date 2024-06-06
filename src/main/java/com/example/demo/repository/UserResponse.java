@@ -15,7 +15,7 @@ public class UserResponse {
     private String middleName;
     private String lastName;
     private String birthday;
-    private Boolean gender;
+    private String gender;
     private String email;
     private Long rub;
     private Integer penny;

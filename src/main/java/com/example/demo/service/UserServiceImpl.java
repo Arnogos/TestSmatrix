@@ -1,7 +1,7 @@
-package service;
+package com.example.demo.service;
 
 import com.example.demo.enity.User;
-import com.example.demo.repository.CreateUserRequest;
+import com.example.demo.repository.CreateUserRequestDTO;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.UserResponse;
 import jakarta.persistence.EntityNotFoundException;
@@ -9,12 +9,10 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import service.UserService;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
 
@@ -22,15 +20,6 @@ import static java.util.Optional.ofNullable;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<UserResponse> findAll() {
-        return userRepository.findAll()
-                .stream()
-                .map(this::buildUserResponse)
-                .collect(Collectors.toList());
-    }
 
     @NonNull
     private UserResponse buildUserResponse(@NotNull User user) {
@@ -50,47 +39,46 @@ public class UserServiceImpl implements UserService {
     @NotNull
     @Override
     @Transactional(readOnly = true)
-    public User findByLogin(@NotNull String userLogin) {
-        System.out.println(888);
-       return userRepository.findByLogin(userLogin);
+    public UserResponse findByLogin(@NotNull String userLogin) {
+       return buildUserResponse(userRepository.findByLogin(userLogin));
     }
 
 
     @NotNull
     @Override
     @Transactional
-    public UserResponse createUser(@NotNull CreateUserRequest request) {
+    public UserResponse createUser(@NotNull CreateUserRequestDTO request) {
         User user = buildUserRequest(request);
         return buildUserResponse(userRepository.save(user));
     }
 
     @NotNull
-    private User buildUserRequest(@NotNull CreateUserRequest request) {
-        return new User()
-                .setLogin(request.getLogin())
-                .setPassword(request.getPassword())
-                .setBirthday(request.getBirthday())
-                .setFirstName(request.getFirstName())
-                .setMiddleName(request.getMiddleName())
-                .setLastName(request.getLastName())
-                .setGender(request.getGender())
-                .setRub(request.getRub()+1000)
-                .setPenny(request.getPenny())
-                .setEmail(request.getEmail());
+    private User buildUserRequest(@NotNull CreateUserRequestDTO request) {
+            return new User()
+                    .setLogin(request.getLogin())
+                    .setPassword(request.getPassword())
+                    .setBirthday(request.getBirthday())
+                    .setFirstName(request.getFirstName())
+                    .setMiddleName(request.getMiddleName())
+                    .setLastName(request.getLastName())
+                    .setGender(request.getGender())
+                    .setRub(request.getRub())
+                    .setPenny(request.getPenny())
+                    .setEmail(request.getEmail());
     }
 
 
-    @Transactional
-    public User payment(Long rub1, Integer penny1, String userLogin){
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public User payment(String userLogin, Long userRub, Integer userPenny){
 
         Optional<User> user = Optional.ofNullable(userRepository.findByLogin(userLogin));
         User user1 = user.get();
 
         Long rub = user1.getRub();
         Integer penny = user1.getPenny();
-        if(rub/10 + penny >= rub1/10 + penny1){
-            user1.setRub(rub - rub1);
-            user1.setPenny(penny - penny1);
+        if(rub/10 + penny >= userRub/10 + userPenny){
+            user1.setRub(rub - userRub);
+            user1.setPenny(penny - userPenny);
            return userRepository.save(user1);
         } else{
             throw new RuntimeException();
@@ -100,14 +88,14 @@ public class UserServiceImpl implements UserService {
     @NotNull
     @Override
     @Transactional
-    public UserResponse update(@NotNull Integer userId, @NotNull CreateUserRequest request) {
+    public UserResponse update(@NotNull Integer userId, @NotNull CreateUserRequestDTO request) {
         User user =  userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User " + userId + " is not found"));
         userUpdate(user, request);
         return buildUserResponse(userRepository.save(user));
     }
 
-    private void userUpdate(@NotNull User user, @NotNull CreateUserRequest request) {
+    private void userUpdate(@NotNull User user, @NotNull CreateUserRequestDTO request) {
         ofNullable(request.getLogin()).ifPresent(user::setLogin);
         ofNullable(request.getFirstName()).ifPresent(user::setFirstName);
         ofNullable(request.getMiddleName()).ifPresent(user::setMiddleName);
@@ -116,11 +104,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    @Transactional
-    public void delete(@NotNull Integer userId) {
-        userRepository.deleteById(userId);
-    }
 
 
 
