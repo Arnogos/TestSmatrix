@@ -41,7 +41,7 @@ public class User {
     private String lastName;
     @NotBlank
     @Column(name = "birthday")
-    private LocalDate birthday;
+    private String birthday;
     @NotBlank
     @Column(name = "gender")
     private String gender;

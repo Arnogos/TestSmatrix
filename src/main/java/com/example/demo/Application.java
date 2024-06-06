@@ -31,19 +31,18 @@ public class Application {
 		Role role = new Role();
 		role.setName("ADMIN");
 
-		Role savedRole = roleRepository.save(role);
 
 		User user = new User();
-		user.setLogin("111")
+		user.setLogin("82222222222")
 				.setPassword(passwordEncoder.encode("111"))
-				.setRoles(Set.of(savedRole))
-				.setFirstName("Alex")
-				.setMiddleName("Alex")
-				.setBirthday()
-				.setLastName("Alex")
+				.setRoles(Set.of(roleRepository.save(role)))
+				.setFirstName("Gleb")
+				.setMiddleName("Pec")
+				.setBirthday("11.11.2011")
+				.setLastName("Nik")
 				.setGender("m")
 				.setRub(1000L)
-				.setEmail("123@mail.ru");
+				.setEmail("222@mail.ru");
 
 		userRepository.save(user) ;
 	}

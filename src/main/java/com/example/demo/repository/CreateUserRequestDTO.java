@@ -13,7 +13,7 @@ public class CreateUserRequestDTO {
     private String firstName;
     private String middleName;
     private String lastName;
-    private LocalDate birthday;
+    private String birthday;
 
     private String email;
     private String gender;
