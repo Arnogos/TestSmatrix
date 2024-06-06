@@ -1,11 +1,14 @@
 package com.example.demo.enity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import jakarta.validation.constraints.Email;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -22,7 +25,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NotBlank
-    @Column(name = "login")
+    @Column(name = "login", unique = true)
     private String login;
     @NotBlank
     @Column(name = "password")
@@ -38,21 +41,21 @@ public class User {
     private String lastName;
     @NotBlank
     @Column(name = "birthday")
-    private String birthday;
+    private LocalDate birthday;
     @NotBlank
     @Column(name = "gender")
     private String gender;
     @NotBlank
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     @Email
     private String email;
-    @NotBlank
+    @NotNull
     @Column(name = "rub")
     private Long rub;
 
     @Column(name = "penny")
     private Integer penny;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")

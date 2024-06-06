@@ -1,0 +1,23 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor User
+
+box Application
+participant "Spring Security"
+participant "Spring Framework\nDispatcher Servlet"
+end box
+
+User -> "Spring Security": <b>GET http://localhost:5432/habrdb
+"Spring Security" -> "Spring Security": Пользователь не\nаутентифицирован
+"Spring Security" --> User: <b>401 Unauthorized\nWWW-Authenticate: Basic Realm ="Users"
+User -> "Spring Security": <b>GET http://localhost:5432/habrdb\nAuthorization: Basic ...
+"Spring Security" -> "Spring Security": Аутентификация пользователя
+"Spring Security" -> "Spring Framework\nDispatcher Servlet": <b> GET http://localhost:5432/habrdb\nAuthorization: Basic ...
+"Spring Framework\nDispatcher Servlet" -->  "Spring Security": <b>200 OK\nContent-type: text/html\n\n<h1>Hello<h1>
+"Spring Security" --> User: <b>200 OK\nContent-type: text/html\n\n<h1>Hello<h1>
+
+@enduml
+

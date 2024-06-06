@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserResponse findByLogin(@NotNull String userLogin) {
-       return buildUserResponse(userRepository.findByLogin(userLogin));
+       return buildUserResponse(userRepository.findByLogin(userLogin).get());
     }
 
 
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public User payment(String userLogin, Long userRub, Integer userPenny){
 
-        Optional<User> user = Optional.ofNullable(userRepository.findByLogin(userLogin));
+        Optional<User> user = userRepository.findByLogin(userLogin);
         User user1 = user.get();
 
         Long rub = user1.getRub();

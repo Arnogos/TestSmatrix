@@ -3,16 +3,17 @@ package com.example.demo.repository;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDate;
+
 @Data
 @Accessors(chain = true)
 public class CreateUserRequestDTO {
-    private Integer id;
     private String login;
     private String password;
     private String firstName;
     private String middleName;
     private String lastName;
-    private String birthday;
+    private LocalDate birthday;
 
     private String email;
     private String gender;
