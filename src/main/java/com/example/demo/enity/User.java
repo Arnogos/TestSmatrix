@@ -59,11 +59,6 @@ public class User {
     )
     private Set<Role> roles;
 
-    public User(String login, String email, String password) {
-        this.login = login;
-        this.email = email;
-        this.password = password;
-    }
 
     @Override
     public boolean equals(Object o) {
